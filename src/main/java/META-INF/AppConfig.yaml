@@ -1,0 +1,7 @@
+persistenceUnitName: JPA_LOCAL
+driver: org.postgresql.Driver
+url: jdbc:postgresql://localhost:5432/webuser
+user: webuser
+password: web-user-secret
+ddlGeneration: drop-and-create-tables
+ddlGenerationMode: database

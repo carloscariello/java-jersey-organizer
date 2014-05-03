@@ -1,0 +1,23 @@
+<h1 class="cover-heading">Add Task</h1>
+<form>
+	<div class="input-group">
+		<span class="input-group-addon">Name</span> <input type="text"
+			class="form-control" ng-model="name" />
+	</div>
+	<div class="input-group">
+		<span class="input-group-addon">Description</span> <input type="text"
+			class="form-control" ng-model="description" />
+	</div>
+	<div class="input-group">
+		<span class="input-group-addon">Content</span>
+		<textarea ng-model="content"></textarea>
+	</div>
+	<a class="btn btn-default" ng-click="addTask()" role="button">add</a>
+</form>
+
+<div ng-if="tasks.length > 0">
+	<h2>Existing Tasks:</h2>
+	<ul id="taskList">
+		<li ng-repeat="task in tasks">{{task.name}}</li>
+	</ul>
+</div>
