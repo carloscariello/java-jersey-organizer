@@ -1,4 +1,9 @@
-/target
+#Build and project files
+**/target
+.classpath
+.project
+.metadata
+.settings/
 *.class
 
 # Mobile Tools for Java (J2ME)
