@@ -4,8 +4,11 @@
 
 var OrganizerApp = angular.module('OrganizerApp', [ 'ngRoute' ]);
 
+/* global url prefix to access the rest api */
+OrganizerApp.constant('UrlPrefix', '/java-jersey-organizer');
+
 /* Configure routes - redirect everything else to '/' */
-function organizerAppConfig($routeProvider) {
+OrganizerApp.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
 		controller : 'StartController',
 		templateUrl : 'views/start.html'
@@ -24,11 +27,10 @@ function organizerAppConfig($routeProvider) {
 	}).otherwise({
 		redirectTo : '/'
 	});
-};
-OrganizerApp.config(organizerAppConfig);
+}]);
 
 
-/* A very simple entity manager */
+/* A very simple user auth service */
 OrganizerApp.factory('UserAuth', ['$http', function ($http) {
 
 	if (typeof (localStorage) == "undefined") {
@@ -78,13 +80,13 @@ OrganizerApp.controller('StartController', function($scope) {
 /**
  * Controller for the task page
  */
-OrganizerApp.controller('TaskController', function($scope, $http, UserAuth) {
+OrganizerApp.controller('TaskController', function($scope, UrlPrefix, $http, UserAuth) {
 	$scope.name = '';
 	$scope.description = '';
 	$scope.tasks = [];
 	
 	$scope.getTasks = function() {
-		$http.get('/organizer/api/tasks').success(function(data, status, headers, config){
+		$http.get(UrlPrefix + '/api/tasks').success(function(data, status, headers, config){
 			$scope.tasks = data;
 		}).error(function(data, status, headers, config){
 			console.log(status);
@@ -102,7 +104,7 @@ OrganizerApp.controller('TaskController', function($scope, $http, UserAuth) {
 			content: $scope.content
 		};
 
-		$http.post('/organizer/api/tasks/create', parameters).success(function(data, status, headers, config){
+		$http.post(UrlPrefix + '/api/tasks/create', parameters).success(function(data, status, headers, config){
 			console.log(data);
 			$scope.tasks.push(data);
 		}).error(function(data, status, headers, config) {
@@ -114,7 +116,7 @@ OrganizerApp.controller('TaskController', function($scope, $http, UserAuth) {
 		var parameters = {
 			id: taskId	
 		};
-		$http.post('/organizer/api/tasks/delete', parameters).success(function(data, status, headers, config){
+		$http.post(UrlPrefix + '/api/tasks/delete', parameters).success(function(data, status, headers, config){
 			console.log(data);
 		}).error(function(data, status, headers, config){
 			console.log(data);
@@ -126,7 +128,7 @@ OrganizerApp.controller('TaskController', function($scope, $http, UserAuth) {
 /**
  * Controller for the login page
  */
-OrganizerApp.controller('LoginController', function($scope, $http, UserAuth) {
+OrganizerApp.controller('LoginController', function($scope, UrlPrefix, $http, UserAuth) {
 	$scope.username = '';
 	$scope.email = '';
 	$scope.password = '';
@@ -138,7 +140,7 @@ OrganizerApp.controller('LoginController', function($scope, $http, UserAuth) {
 			password: $scope.password
 		};
 
-		$http.post("/organizer/api/auth/signup", parameters).
+		$http.post(UrlPrefix + '/api/auth/signup', parameters).
 		success(function(data, status, headers, config) {
 			console.log(data);
 			if(data.status == "SUCCESSFUL") {
@@ -155,7 +157,7 @@ OrganizerApp.controller('LoginController', function($scope, $http, UserAuth) {
 			password : $scope.password
 		};
 
-		$http.post('/organizer/api/auth/signin', parameters).
+		$http.post(UrlPrefix + '/api/auth/signin', parameters).
 	    success(function(data, status, headers, config) {
 			console.log(data);
 			if (data.status == "SUCCESSFUL") {
